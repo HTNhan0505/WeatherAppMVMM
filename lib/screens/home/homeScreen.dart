@@ -14,8 +14,6 @@ class HomeScreen extends StatelessWidget {
 
   final HomeViewModel viewModel = Get.put(HomeViewModel());
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,39 +104,39 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget weatherImage() {
-    return CachedNetworkImage(
-      imageUrl:
-          'https://openweathermap.org/img/wn/${viewModel.weatherModel.value.weather?.first.icon}@4x.png',
-      height: 120,
-      width: 120,
-      imageBuilder: (context, imageProvider) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              )),
-        );
-      },
-      errorWidget: (context, url, error) {
-        return Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Image.asset('assets/images/clouds.png'),
-        );
-      },
-      placeholder: (context, url) {
-        return Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: Colors.white,
-          ),
-        );
-      },
-    );
+    return Obx(() => CachedNetworkImage(
+          imageUrl:
+              'https://openweathermap.org/img/wn/${viewModel.weatherModel.value.weather?.first.icon}@4x.png',
+          height: 120,
+          width: 120,
+          imageBuilder: (context, imageProvider) {
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )),
+            );
+          },
+          errorWidget: (context, url, error) {
+            return Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Image.asset('assets/images/clouds.png'),
+            );
+          },
+          placeholder: (context, url) {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            );
+          },
+        ));
   }
 
   Widget divider() {
