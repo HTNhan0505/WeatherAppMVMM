@@ -1,17 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 
 class CustomTextField extends StatelessWidget {
   final String? hint;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final IconData? prefixIcon;
+  final Function(String)? onPressed;
 
-  const CustomTextField({
-    super.key,
+  const CustomTextField({super.key,
     this.onChanged,
     this.hint,
     this.controller,
     this.prefixIcon,
+    this.onPressed,
   });
 
   @override
@@ -30,6 +34,17 @@ class CustomTextField extends StatelessWidget {
           color: const Color(0xff3E515B),
           size: 18,
         ),
+
+        suffixIcon: IconButton(
+          onPressed: () {
+            if(onPressed != null) {
+              onPressed!(controller!.text);
+            }
+          },
+          icon: Icon(Icons.search),
+        ),
+
+
         fillColor: Colors.white,
         filled: true,
         hintText: hint,

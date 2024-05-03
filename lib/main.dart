@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:weather_app/helper/theme_helper.dart';
+
 import 'package:weather_app/screens/home/homeScreen.dart';
+
+import 'components/theme_helper.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

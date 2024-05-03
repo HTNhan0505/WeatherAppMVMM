@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../helper/global_variables.dart';
-import '../helper/theme_helper.dart';
+import '../components/global_variables.dart';
+import '../components/theme_helper.dart';
+
 
 class LoaderView extends StatelessWidget {
   const LoaderView({super.key});

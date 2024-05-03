@@ -6,7 +6,7 @@ class GetXHelper {
   static showSnackBar({required String message}) {
     Get.showSnackbar(
       GetSnackBar(
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: 1),
         backgroundColor: Colors.white,
         message: message,
         messageText: Text(message,style: TextStyle(color: Colors.black),),

@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:weather_app/screens/location/locationScreen.dart';
 import 'package:weather_app/viewModel/homeViewModel.dart';
 import 'package:weather_app/widgets/loader_view.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
+
   final HomeViewModel viewModel = Get.put(HomeViewModel());
+
 
 
   @override
@@ -52,9 +53,12 @@ class HomeScreen extends StatelessWidget {
     return AppBar(
       title: Obx(() => Text(viewModel.location.value)),
       actions: [
-        IconButton(onPressed: () {
-          Get.to(()=>LocationScreen());
-        }, icon: Icon(Icons.location_on_outlined),)
+        IconButton(
+          onPressed: () {
+            viewModel.changeLocation();
+          },
+          icon: Icon(Icons.location_on_outlined),
+        )
       ],
     );
   }
@@ -64,7 +68,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         weatherImage(),
         Text(
-          'Current Date',
+          viewModel.getDate(),
           style: TextStyle(
             fontSize: 17,
             color: Colors.white,
@@ -72,12 +76,15 @@ class HomeScreen extends StatelessWidget {
         ),
         Wrap(
           children: [
-            Text(
-              '17',
-              style: TextStyle(
-                  fontSize: 45,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900),
+            Obx(
+              () => Text(
+                (viewModel.weatherModel.value.main?.temp ?? 00)
+                    .toStringAsFixed(0),
+                style: TextStyle(
+                    fontSize: 45,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
             ),
             Text(
               ' o',
@@ -87,10 +94,12 @@ class HomeScreen extends StatelessWidget {
             )
           ],
         ),
-        Text(
-          'Condition',
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
+        Obx(
+          () => Text(
+            viewModel.weatherModel.value.weather?.first.main ?? 'N/A',
+            style: TextStyle(
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );
@@ -98,7 +107,8 @@ class HomeScreen extends StatelessWidget {
 
   Widget weatherImage() {
     return CachedNetworkImage(
-      imageUrl: 'https://home.openweathermap.org/img/wn/${viewModel.weatherModel.value.weather?.first.icon}@4x.png',
+      imageUrl:
+          'https://openweathermap.org/img/wn/${viewModel.weatherModel.value.weather?.first.icon}@4x.png',
       height: 120,
       width: 120,
       imageBuilder: (context, imageProvider) {
@@ -141,85 +151,109 @@ class HomeScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            detailItem(
-                title: 'Minimum',
-                value: '',
-                icon: CupertinoIcons.down_arrow,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Minimum',
+                  value:
+                      '${viewModel.weatherModel.value.main?.tempMin ?? 'N/A'}',
+                  icon: CupertinoIcons.down_arrow,
+                  unit: ''),
+            ),
             SizedBox(width: 10),
-            detailItem(
-                title: 'Maximum',
-                value: '',
-                icon: CupertinoIcons.up_arrow,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Maximum',
+                  value:
+                      '${viewModel.weatherModel.value.main?.tempMax ?? 'N/A'}',
+                  icon: CupertinoIcons.up_arrow,
+                  unit: ''),
+            ),
           ],
         ),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            detailItem(
-                title: 'Wind',
-                value: '',
-                icon: Icons.wind_power,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Wind',
+                  value: '${viewModel.weatherModel.value.wind?.speed ?? 'N/A'}',
+                  icon: Icons.wind_power,
+                  unit: 'm/s '),
+            ),
             SizedBox(width: 10),
-            detailItem(
-                title: 'Feel',
-                value: '',
-                icon: Icons.cloudy_snowing,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Feel',
+                  value:
+                      '${viewModel.weatherModel.value.main?.feelsLike ?? 'N/A'}',
+                  icon: Icons.cloudy_snowing,
+                  unit: ''),
+            ),
           ],
         ),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            detailItem(
-                title: 'Pressure',
-                value: '',
-                icon: Icons.thermostat,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Pressure',
+                  value:
+                      '${viewModel.weatherModel.value.main?.pressure ?? 'N/A'}',
+                  icon: Icons.thermostat,
+                  unit: 'mbar'),
+            ),
             SizedBox(width: 10),
-            detailItem(
-                title: 'Humidity',
-                value: '',
-                icon: Icons.water_drop_outlined,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Humidity',
+                  value:
+                      '${viewModel.weatherModel.value.main?.humidity ?? 'N/A'}',
+                  icon: Icons.water_drop_outlined,
+                  unit: '%'),
+            ),
           ],
         ),
         divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            detailItem(
-                title: 'Sun Rise',
-                value: '',
-                icon: Icons.sunny,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Sun Rise',
+                  value: viewModel.timeStamptoTime(
+                      viewModel.weatherModel.value.sys?.sunrise),
+                  icon: Icons.sunny,
+                  unit: ''),
+            ),
             SizedBox(width: 10),
-            detailItem(
-                title: 'Sun set',
-                value: '',
-                icon: Icons.sunny_snowing,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Sun set',
+                  value: viewModel.timeStamptoTime(
+                      viewModel.weatherModel.value.sys?.sunset),
+                  icon: Icons.sunny_snowing,
+                  unit: ''),
+            ),
           ],
         ),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            detailItem(
-                title: 'Latitude',
-                value: '',
-                icon: Icons.location_on,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Latitude',
+                  value: '${viewModel.weatherModel.value.coord?.lat ?? 'N/A'}',
+                  icon: Icons.location_on,
+                  unit: ''),
+            ),
             SizedBox(width: 10),
-            detailItem(
-                title: 'Longitude',
-                value: '',
-                icon: Icons.location_on,
-                unit: ''),
+            Obx(
+              () => detailItem(
+                  title: 'Longitude',
+                  value: '${viewModel.weatherModel.value.coord?.lon ?? 'N/A'}',
+                  icon: Icons.location_on,
+                  unit: ''),
+            ),
           ],
         ),
       ],
